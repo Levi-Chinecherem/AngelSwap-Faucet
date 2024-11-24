@@ -1,70 +1,123 @@
-# Getting Started with Create React App
+# AngelSwap Faucet System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the faucet system for **AngelSwap**, a decentralized platform built on **PulseChain**. The faucet allows users to claim tokens daily after connecting their wallets. This system includes features like token claiming, wallet connection, and network guidance for users.
 
-## Available Scripts
+## Features
+- **Daily Token Claims**: Users can claim multiple tokens (ANGEL, NGN Token, EKE, ONU, HALO) daily.
+- **MetaMask Integration**: Wallet connection with automatic switching to PulseChain network.
+- **Responsive Design**: Optimized for mobile use, accessible via a Telegram mini-app.
+- **User-Friendly Interface**: Simple UI to select tokens and view contract addresses for adding to MetaMask.
 
-In the project directory, you can run:
+## Prerequisites
 
-### `npm start`
+Before you start, ensure you have the following installed:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Node.js](https://nodejs.org/en/) (version 16.x or higher)
+- [npm](https://www.npmjs.com/) (Node package manager, comes with Node.js)
+- [Telegram WebApp](https://core.telegram.org/bots/webapps) (For Telegram bot functionality)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `npm test`
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Levi-Chinecherem/AngelSwap-Faucet.git
+   cd AngelSwap-Faucet
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install the dependencies:
+   ```bash
+   npm install
+   ```
 
-### `npm run build`
+3. Create a `.env` file at the root of the project and add your contract address for PulseChain network:
+   ```
+   REACT_APP_CONTRACT_ADDRESS=0x123ABC456DEF7890
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Start the development server:
+   ```bash
+   npm start
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   This will start the app at `http://localhost:3000`. You can now view the faucet system in your browser.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Usage
 
-### `npm run eject`
+### Wallet Connection
+- The faucet allows users to connect their MetaMask wallet or any Ethereum-compatible wallet.
+- Upon successful wallet connection, the user’s Telegram username will be automatically displayed in the app.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Claim Tokens
+- Users can select from a list of available tokens (ANGEL, NGN Token, EKE, ONU, HALO).
+- Each user can claim tokens once per day.
+- The faucet displays the contract addresses for each token, which can be added to MetaMask by copying the contract address.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### MetaMask Network Switch Guide
+- The system provides guidance for users on how to switch to the **PulseChain** network in MetaMask.
+- Contract addresses for the tokens are displayed, and users can easily copy and add them to their wallets.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## File Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `src/` - Contains all the source code for the frontend.
+  - `components/` - Contains React components like `Navbar`, `Claim`, `Contract`, `Guide`, `Footer`.
+  - `App.js` - Main entry point for the React app.
+  - `contract/` - Folder to store contract ABI and related files (optional).
+- `.env` - Environment file to store sensitive information like contract address.
 
-## Learn More
+## Customizing the Faucet
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Changing Token Details
+To change the tokens available in the faucet or their contract addresses, you can modify the `faucetTokens` array in the `App.js` file.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```javascript
+const faucetTokens = [
+  { name: "ANGEL", contract: "0x123ABC456DEF7890" },
+  { name: "NGN Token", contract: "0x456DEF7890ABC123" },
+  { name: "EKE", contract: "0x7890ABC123DEF456" },
+  { name: "ONU", contract: "0xDEF4567890ABC123" },
+  { name: "HALO", contract: "0xABC123DEF4567890" },
+];
+```
 
-### Code Splitting
+### Modifying the UI
+The UI is built with **Tailwind CSS**. You can customize the styling by modifying the classes in the components located in the `src/components/` directory.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+For example, to change the background color of the "Claim Tokens" button, you can update the classes in the `Claim.js` file:
+```javascript
+<button
+  onClick={() => claimTokens(selectedToken)}
+  disabled={!walletConnected}
+  className={`w-full bg-sciFiAccent text-sciFiBg py-3 rounded font-bold ${walletConnected ? "hover:bg-white hover:text-sciFiAccent" : "opacity-50 cursor-not-allowed"} transition`}
+>
+  Claim Tokens
+</button>
+```
 
-### Analyzing the Bundle Size
+## Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+To deploy the application to production:
 
-### Making a Progressive Web App
+1. Build the app:
+   ```bash
+   npm run build
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+2. Deploy the `build/` folder to your preferred hosting platform (e.g., Netlify, Vercel, or your custom server).
 
-### Advanced Configuration
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+1. Fork the repository
+2. Clone your forked repository to your local machine
+3. Make your changes and commit them
+4. Push the changes to your forked repository
+5. Open a pull request from your fork to the main repository
 
-### Deployment
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This project is licensed under the MIT License.
 
-### `npm run build` fails to minify
+## Acknowledgements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Built with React, Tailwind CSS, and Web3 technologies.
+- Powered by the **PulseChain** blockchain.
+- Special thanks to Telegram for their WebApp platform and the broader crypto community!
