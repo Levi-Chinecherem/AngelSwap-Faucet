@@ -8,14 +8,28 @@ const Landing = ({ connectWallet, walletAddress }) => {
           AngelSwap Faucet
         </h1>
         <p className="text-lg text-sciFiText mb-6">
-          Claim your free tokens daily and add them to your wallet! Switch to the PulseChain network to get started.
+          Claim your daily free ANGEL tokens and add them to your wallet! Ensure you are connected to the PulseChain network.
         </p>
         <button
-          onClick={connectWallet}
-          className="bg-sciFiAccent text-sciFiBg py-3 px-8 rounded font-bold hover:bg-white hover:text-sciFiAccent transition"
+          onClick={() => {
+            console.log("Connect Wallet button clicked"); // Debug log for the button click
+            connectWallet();
+          }}
+          className={`py-3 px-8 rounded font-bold transition ${walletAddress
+            ? "bg-green-600 text-white cursor-default"
+            : "bg-sciFiAccent text-sciFiBg hover:bg-white hover:text-sciFiAccent"
+            }`}
+          disabled={!!walletAddress} // Disable button if wallet is already connected
         >
-          {walletAddress ? `Connected: ${walletAddress}` : "Connect Wallet"}
+          {walletAddress
+            ? `Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+            : "Connect Wallet"}
         </button>
+        {walletAddress && (
+          <p className="text-sm text-green-500 mt-4">
+            Wallet connected successfully!
+          </p>
+        )}
       </div>
     </section>
   );

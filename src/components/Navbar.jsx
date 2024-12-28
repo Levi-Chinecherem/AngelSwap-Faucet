@@ -6,14 +6,14 @@ const Navbar = () => {
   useEffect(() => {
     // Check if Telegram WebApp is available
     if (window.Telegram && window.Telegram.WebApp) {
-      // Get the user's Telegram username
+      // Retrieve the user's Telegram username
       const user = window.Telegram.WebApp.initDataUnsafe;
       const userName = user?.user?.username;
-      
+
       if (userName) {
         setUsername(userName);
       } else {
-        setUsername("Guest"); // If no username found, show "Guest"
+        setUsername("Guest"); // Default to "Guest" if username isn't available
       }
     }
   }, []);

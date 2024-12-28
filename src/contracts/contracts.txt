@@ -1,0 +1,30 @@
+C:\Development\web3\_AngelSwap_\contract (main -> origin) (angelswap-contract@1.0.0)
+λ npx hardhat run scripts/deployAngelToken.js --network pulsechain
+Deploying contracts with the account: 0xA990D48481647ec886200a838F43c2A9bbbbB641
+AngelToken_Main deployed to: 0xCB32472D3cf39dD88Aeb261139D9906a12dA7403       
+                                                                                          
+C:\Development\web3\_AngelSwap_\contract (main -> origin) (angelswap-contract@1.0.0)
+λ npx hardhat run scripts/deployOtherTokens.js --network pulsechain
+Deploying contracts with the account: 0xA990D48481647ec886200a838F43c2A9bbbbB641
+NGN Token deployed to: 0xf7563bF7F5FD31322566E7874ED5BAbD2C99A80F
+EKE Token deployed to: 0xFc10A198B69d12c4539c647B5Bb37d9AfCE6a079
+ONU Token deployed to: 0x01B1853A247E3040401f9196fF30C5f5FF548cdF
+HALO Token deployed to: 0x708C8012C65607C5E1B437613F6FAda2A3057194
+
+C:\Development\web3\_AngelSwap_\contract (main -> origin) (angelswap-contract@1.0.0)
+λ npx hardhat run scripts/deployFaucet.js --network pulsechain
+Nothing to compile
+Faucet deployed at address: 0x519863aA2Ed5245Ac77C037E2A793eC5c4EdEdd0
+
+C:\Development\web3\_AngelSwap_\contract (main -> origin) (angelswap-contract@1.0.0)
+λ npx hardhat run scripts/deployLiquidityPool.js --network pulsechain
+Deploying LiquidityPool implementation...
+LiquidityPool implementation deployed to: 0xd83d96b2d78335B347b269FDD6e13dEA26626Ee1
+
+C:\Development\web3\_AngelSwap_\contract (main -> origin) (angelswap-contract@1.0.0)
+λ npx hardhat run scripts/deployLiquidityPoolFactory.js --network pulsechain
+LiquidityPoolFactory deployed to: 0xA01BFc416F7D7Cb0e0F327908D5af95cF105a680
+
+C:\Development\web3\_AngelSwap_\contract (main -> origin) (angelswap-contract@1.0.0)
+λ npx hardhat run scripts/deployOrderBook.js --network pulsechain
+OrderBook deployed to: 0x88C6f0c6ab50Fd9C77709EF80d6A5e8874Dc1aEd
