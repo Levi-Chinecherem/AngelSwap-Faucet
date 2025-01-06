@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { ethers } from "ethers"; // Importing ethers.js
+import WalletConnectProvider from "@walletconnect/client"; // Import WalletConnect
+import { Web3Provider } from "@ethersproject/providers"; // For WalletConnect provider
+
 import Landing from "./components/Landing";
 import Claim from "./components/Claim";
 import Contract from "./components/Contract";
@@ -16,19 +19,29 @@ const App = () => {
   const tokenABI = contractJson.abi; // Use the ABI from the JSON file
   const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS; // Load contract address from env
 
-  // Connect Wallet to MetaMask
+  // Connect Wallet to MetaMask or WalletConnect
   const connectWallet = async () => {
     try {
-      console.log("Checking for MetaMask...");
-      if (!window.ethereum) {
-        alert("MetaMask is not installed. Please install MetaMask to proceed.");
-        return;
+      let web3Provider;
+
+      // Check if MetaMask is available (browser extension)
+      if (window.ethereum) {
+        console.log("MetaMask detected. Connecting...");
+        await window.ethereum.enable(); // Request accounts using enable()
+        web3Provider = new ethers.BrowserProvider(window.ethereum); // Use BrowserProvider for MetaMask
+      } else {
+        // Fallback to WalletConnect (mobile app)
+        console.log("Using WalletConnect...");
+        const walletConnectProvider = new WalletConnectProvider({
+          rpc: {
+            943: "https://rpc.v4.testnet.pulsechain.com", // PulseChain Testnet RPC URL
+          },
+          chainId: 943, // PulseChain Testnet Chain ID
+        });
+        await walletConnectProvider.enable();
+        web3Provider = new Web3Provider(walletConnectProvider);
       }
 
-      console.log("MetaMask detected. Connecting...");
-      await window.ethereum.enable(); // Request accounts using enable()
-
-      const web3Provider = new ethers.BrowserProvider(window.ethereum); // Use BrowserProvider for MetaMask
       const signer = await web3Provider.getSigner();
       const address = await signer.getAddress();
 
@@ -51,7 +64,7 @@ const App = () => {
     } catch (err) {
       console.error("Failed to connect wallet:", err);
       if (err.message.includes("User rejected the request")) {
-        alert("Connection to MetaMask was rejected. Please try again.");
+        alert("Connection was rejected. Please try again.");
       } else {
         alert("An unexpected error occurred. Please try again later.");
       }
