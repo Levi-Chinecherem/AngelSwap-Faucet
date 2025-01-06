@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { ethers } from "ethers"; // Importing ethers.js
-import WalletConnectProvider from "@walletconnect/client"; // Import WalletConnect
-import { Web3Provider } from "@ethersproject/providers"; // For WalletConnect provider
+import { BrowserProvider, Contract, parseUnits } from "ethers"; // Updated importsWalletConnect
+import { EthereumProvider } from "@walletconnect/ethereum-provider";
 
 import Landing from "./components/Landing";
 import Claim from "./components/Claim";
-import Contract from "./components/Contract";
+import ContractComponent from "./components/Contract";
 import Guide from "./components/Guide";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -22,52 +21,30 @@ const App = () => {
   // Connect Wallet to MetaMask or WalletConnect
   const connectWallet = async () => {
     try {
-      let web3Provider;
+      const provider = await EthereumProvider.init({
+        projectId: "aef30f98b347495ca196d8b272ae050d", // Replace with your WalletConnect project ID
+        chains: [943], // PulseChain Testnet Chain ID
+        showQrModal: true, // Display QR modal for non-supported environments
+        qrcodeModalOptions: {
+          mobileLinks: ["metamask", "trust"], // Specify supported wallets for deep linking
+        },
+      });
 
-      // Check if MetaMask is available (browser extension)
-      if (window.ethereum) {
-        console.log("MetaMask detected. Connecting...");
-        await window.ethereum.enable(); // Request accounts using enable()
-        web3Provider = new ethers.BrowserProvider(window.ethereum); // Use BrowserProvider for MetaMask
-      } else {
-        // Fallback to WalletConnect (mobile app)
-        console.log("Using WalletConnect...");
-        const walletConnectProvider = new WalletConnectProvider({
-          rpc: {
-            943: "https://rpc.v4.testnet.pulsechain.com", // PulseChain Testnet RPC URL
-          },
-          chainId: 943, // PulseChain Testnet Chain ID
-        });
-        await walletConnectProvider.enable();
-        web3Provider = new Web3Provider(walletConnectProvider);
-      }
-
+      await provider.enable(); // Request user connection
+      const web3Provider = new BrowserProvider(provider);
       const signer = await web3Provider.getSigner();
       const address = await signer.getAddress();
 
-      console.log("Connected Wallet Address:", address);
-
-      if (!contractAddress) {
-        throw new Error(
-          "Contract address is not defined in the environment variables. Please check your .env file."
-        );
-      }
-
-      console.log("Initializing contract...");
-      const contractInstance = new ethers.Contract(contractAddress, tokenABI, signer);
-
+      console.log("Wallet connected:", address);
       setWalletAddress(address);
       setProvider(web3Provider);
-      setContract(contractInstance);
 
-      console.log("Wallet connected successfully.");
+      // Initialize the contract
+      const contractInstance = new Contract(contractAddress, tokenABI, signer);
+      setContract(contractInstance);
     } catch (err) {
-      console.error("Failed to connect wallet:", err);
-      if (err.message.includes("User rejected the request")) {
-        alert("Connection was rejected. Please try again.");
-      } else {
-        alert("An unexpected error occurred. Please try again later.");
-      }
+      console.error("Error connecting wallet:", err);
+      alert("Failed to connect. Please try again.");
     }
   };
 
@@ -79,7 +56,7 @@ const App = () => {
     }
 
     try {
-      const FAUCET_AMOUNT = ethers.parseUnits("5", 18); // Amount of tokens to claim
+      const FAUCET_AMOUNT = parseUnits("5", 18); // Amount of tokens to claim
       const tx = await contract.mint(walletAddress, FAUCET_AMOUNT); // Call the mint function
       await tx.wait(); // Wait for transaction confirmation
       alert(`Claimed 5 ANGEL tokens for wallet: ${walletAddress}`);
@@ -94,7 +71,7 @@ const App = () => {
       <Navbar />
       <Landing connectWallet={connectWallet} walletAddress={walletAddress} />
       <Claim claimTokens={claimTokens} walletConnected={!!walletAddress} />
-      <Contract />
+      <ContractComponent />
       <Guide />
       <Footer />
     </div>
